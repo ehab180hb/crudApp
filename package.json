@@ -1,0 +1,27 @@
+{
+  "name": "crud",
+  "version": "1.0.0",
+  "description": "CRUD backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "NODE_ENV=development nodemon server.js"
+  },
+  "author": "Ehab Khaireldin",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "4.19.1",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-prettier": "^2.6.0",
+    "nodemon": "^1.17.4",
+    "prettier": "1.12.1"
+	},
+	"dependencies": {
+    "dotenv": "^5.0.1",
+    "express": "^4.16.3",
+    "joi": "^13.3.0",
+    "mongodb": "^3.1.0-beta4",
+    "mongodb-uri": "^0.9.7",
+    "winston": "^3.0.0-rc5"
+  }
+}
