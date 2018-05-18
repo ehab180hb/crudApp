@@ -4,17 +4,25 @@
   "description": "CRUD backend",
   "main": "server.js",
   "scripts": {
+		"test": "NODE_ENV=test PORT=3012 mocha -s 0 --opts ./tests/mocha.opts \"./tests/**/*.test.js\"",
+    "pretest": "eslint --ignore-path .gitignore .",
+    "coverage": "nyc report mocha -s 0 \"./tests/**/*.test.js\"",
     "start": "node server.js",
     "dev": "NODE_ENV=development nodemon server.js"
   },
   "author": "Ehab Khaireldin",
   "license": "MIT",
   "devDependencies": {
+    "chai": "^4.1.2",
     "eslint": "4.19.1",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-prettier": "^2.6.0",
+    "mocha": "^5.1.1",
     "nodemon": "^1.17.4",
-    "prettier": "1.12.1"
+    "nyc": "^11.8.0",
+    "prettier": "1.12.1",
+    "rewire": "^4.0.1",
+    "supertest": "^3.1.0"
 	},
 	"dependencies": {
     "dotenv": "^5.0.1",
