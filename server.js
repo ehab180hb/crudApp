@@ -1,10 +1,13 @@
 const { app, MongoClient, logger } = require('./util');
 const { expressConf, mongoConf } = require('./config');
 const bodyParser = require('body-parser');
+const morgan = require('morgan');
 const apiRoutes = require('./api/routes/index');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+if (app.get('env') == 'development') app.use(morgan('tiny'));
 
 (async function() {
   const { uri, dbName } = mongoConf;

@@ -56,7 +56,7 @@ describe('module tests', () => {
     });
 
     it('should list all users', async function() {
-      const res = await request.get('/api/v1/user');
+      const res = await request.get('/api/v1/user/');
       expect(res.status).to.equal(200);
       expect(res.body)
         .to.be.instanceof(Array)
@@ -66,94 +66,98 @@ describe('module tests', () => {
     });
 
     it('should return an existing user', async () => {
-      const id = '';
-      const noId = '';
-      const invalidId = '';
+      const id = '5affe783a49ebd0355359923';
+      const noId = '5affe783a49ebd0355359920';
+      const invalidId = 'abc';
       const [res, noRes, invalidRes] = await Promise.all([
-        request.get(`/api/v1/user/${id}`),
-        request.get(`/api/v1/user/${noId}`),
-        request.get(`/api/v1/user/${invalidId}`),
+        request.get(`/api/v1/user/${id}/`),
+        request.get(`/api/v1/user/${noId}/`),
+        request.get(`/api/v1/user/${invalidId}/`),
       ]);
       expect(res.status).to.equal(200);
       expect(res.body)
         .to.be.instanceOf(Object)
-        .and.to.have.property('email', 'user2@email.com');
+        .and.to.have.property('email', 'user1@email.com');
 
       expect(noRes.status).to.equal(404);
-      expect(noRes.body).to.have.property('error', /user does not exist/);
+      expect(noRes.body).to.have.property('error', 'User does not exist');
 
       expect(invalidRes.status).to.equal(400);
-      expect(invalidRes.body).to.have.property('error', /bad ID/);
+      expect(invalidRes.body)
+        .to.have.property('error')
+        .that.match(/ValidationError/);
     });
 
-    // it('should add a new user', async () => {
-    //   const email = '';
-    //   const invalidEmail = '';
-    //   const [res, invalidRes] = await Promise.all([
-    //     request.post(`api/v1/user/${email}`),
-    //     request.post(`api/v1/user/${invalidEmail}`),
-    //   ]);
-    //   expect(res.status).to.equal(201);
-    //   expect(res.body)
-    //     .to.be.instanceOf(Object)
-    //     .and.to.have.property('created', true);
+    it('should add a new user', async () => {
+      const email = 'user6@email.com';
+      const invalidEmail = 'user7email,com';
+      const existingEmail = 'user5@email.com';
+      const [res, invalidRes, existingRes] = await Promise.all([
+        request.post('/api/v1/user/').send({ email }),
+        request.post('/api/v1/user/').send({ email: invalidEmail }),
+        request.post('/api/v1/user/').send({ email: existingEmail }),
+      ]);
 
-    //   expect(res.body)
-    //     .to.have.property('user')
-    //     .which.has.property('email', email);
+      expect(res.status).to.equal(201);
+      expect(res.body)
+        .to.be.instanceOf(Object)
+        .and.to.have.property('n', 1);
 
-    //   expect(invalidRes.status).to.equal(400);
-    //   expect(invalidRes.body).to.have.property('error', /bad email/);
-    // });
+      expect(invalidRes.status).to.equal(400);
+      expect(invalidRes.body)
+        .to.have.property('error')
+        .and.match(/must be a valid email/);
+    });
 
-    // it('should edit user email', async () => {
-    //   const id = '';
-    //   const noId = '';
-    //   const newEmail = '';
-    //   const badNewEmail = '';
+    it('should edit user email', async () => {
+      const id = '5affe783a49ebd0355359963';
+      const wrongId = '5affe783a49ebd0355359964';
+      const newEmail = 'user8@email.com';
+      const invalidNewEmail = 'user92email.com';
 
-    //   const [res, noIdRes, badEmailRes] = await Promise.all([
-    //     request.patch(`api/v1/user/${id}`),
-    //     request.patch(`api/v1/user/${noId}`),
-    //     request.patch(`api/v1/user/${id}`),
-    //   ]);
+      const [res, wrongIdRes, invalidEmailRes] = await Promise.all([
+        request.put(`/api/v1/user/${id}/`).send({ email: newEmail }),
+        request.put(`/api/v1/user/${wrongId}/`).send({ email: newEmail }),
+        request.put(`/api/v1/user/${id}/`).send({ email: invalidNewEmail }),
+      ]);
 
-    //   expect(res.status).to.equal(200);
-    //   expect(res.body)
-    //     .to.be.instanceOf(Object)
-    //     .which.has.property('modifiedCount', 1);
+      expect(res.status).to.equal(200);
+      expect(res.text).which.matches(/User info changed/);
 
-    //   expect(res.body).to.have.property('matchedCount', 1);
-    //   expect(res.body)
-    //     .to.have.property('updated')
-    //     .which.has.property('email', newEmail);
+      expect(wrongIdRes.status).to.equal(404);
+      expect(wrongIdRes.body)
+        .to.have.property('error')
+        .which.matches(/User not found/);
 
-    //   expect(noIdRes.status).to.equal(404);
-    //   expect(noIdRes.body).to.have.property('error', /user does not exist/);
+      expect(invalidEmailRes.status).to.equal(400);
+      expect(invalidEmailRes.body)
+        .to.have.property('error')
+        .which.matches(/must be a valid email/);
+    });
 
-    //   expect(badEmailRes.status).to.equal(400);
-    //   expect(badEmailRes.body).to.have.property('error', /bad email/);
-    // });
+    it('should delete a user', async () => {
+      const id = '5affe783a49ebd0355359923';
+      const noId = '5affe783a49ebd0355359951';
+      const badId = 'hij';
 
-    // it('should delete a user', async () => {
-    //   const id = '';
-    //   const noId = '';
-    //   const badId = '';
+      const [res, noRes, badRes] = await Promise.all([
+        request.delete(`/api/v1/user/${id}/`),
+        request.delete(`/api/v1/user/${noId}/`),
+        request.delete(`/api/v1/user/${badId}/`),
+      ]);
 
-    //   const [res, noRes, badRes] = await Promise.all([
-    //     request.delete(`api/v1/user/${id}`),
-    //     request.delete(`api/v1/user/${noId}`),
-    //     request.delete(`api/v1/user/${id}`),
-    //   ]);
+      expect(res.status).to.equal(200);
+      expect(res.text).to.equal('User deleted');
 
-    //   expect(res.status).to.equal(200);
-    //   expect(res.body).to.have.property('deletedCount', 1);
+      expect(noRes.status).to.equal(404);
+      expect(noRes.body)
+        .to.have.property('error')
+        .and.to.match(/User does not exist/);
 
-    //   expect(noRes.status).to.equal(404);
-    //   expect(noRes.body).to.have.property('error', /user does not exist/);
-
-    //   expect(badRes.status).to.equal(400);
-    //   expect(badRes.body).to.have.property('error', /bad ID/);
-    // });
+      expect(badRes.status).to.equal(400);
+      expect(badRes.body)
+        .to.have.property('error')
+        .and.to.match(/ValidationError/);
+    });
   });
 });

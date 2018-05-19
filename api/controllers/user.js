@@ -1,7 +1,13 @@
 const { logger, ObjectId } = require('../../util');
+const {
+  validateGetUser,
+  validateAddUser,
+  validateEditUser,
+  validateDeleteUser,
+} = require('../handlers/user/validation');
 
 module.exports = {
-  getAllUsers: async function getAllUsers(req, res) {
+  async getAllUsers(req, res) {
     try {
       const { DB: db } = req;
       const collection = db.collection('users');
@@ -16,12 +22,14 @@ module.exports = {
       res.status(400).json({ error: error.message });
     }
   },
-  getUser: async function getUser(req, res) {
+  async getUser(req, res) {
     try {
+      const { params } = req;
+      const valid = validateGetUser({ id: params.id });
+      if (valid.error) throw new Error(valid.error);
       const { DB: db } = req;
       const collection = db.collection('users');
-      const { query } = req;
-      const userInfo = await collection.findOne(ObjectId(query.id));
+      const userInfo = await collection.findOne(ObjectId(params.id));
       if (!userInfo) {
         res.status(404).json({ error: 'User does not exist' });
         return;
@@ -32,22 +40,70 @@ module.exports = {
       res.status(400).json({ error: error.message });
     }
   },
-  editUser: async function editUser(req, res) {
+  async editUser(req, res) {
     try {
-      const { DB: db } = req;
+      const { DB: db, body, params } = req;
+      const valid = validateEditUser({ id: params.id, email: body.email });
+      if (valid.error) throw new Error(valid.error);
       const collection = db.collection('users');
-      const { query, body } = req;
-      const { matchedCount, modifiedCount } = await collection.updateOne(
-        { _id: ObjectId(query.id) },
+      const { result } = await collection.updateOne(
+        { _id: ObjectId(params.id) },
         { $set: { email: body.email } },
       );
-      if (!matchedCount) {
-        res.status(404);
-      } else if (!modifiedCount) {
-        res.status(304);
-      } else {
-        res.status(200);
+      // console.log(result.result);
+
+      if (!result.n) {
+        res.status(404).json({
+          error: 'User not found',
+        });
+        return;
       }
+
+      if (!result.nModified) {
+        res.status(304).end();
+        return;
+      }
+
+      res.status(200).send('User info changed');
+      return;
+    } catch (error) {
+      logger.error(error);
+      res.status(400).json({ error: error.message });
+    }
+  },
+  async addUser(req, res) {
+    try {
+      const { DB: db, body } = req;
+      const valid = validateAddUser(body);
+
+      if (valid.error) throw new Error(valid.error);
+      const collection = db.collection('users');
+
+      const existsAlready = await collection.findOne({ email: body.email });
+      if (existsAlready) {
+        res.status(409).json({ error: 'User already exists' });
+        return;
+      }
+      const addedUser = await collection.insertOne({ email: body.email });
+      res.status(201).json(addedUser);
+    } catch (error) {
+      logger.error(error);
+      res.status(400).json({ error: error.message });
+    }
+  },
+
+  async deleteUser(req, res) {
+    try {
+      const { DB: db, params } = req;
+      const valid = validateDeleteUser(params);
+      if (valid.error) throw new Error(valid.error);
+      const collection = db.collection('users');
+      const { result } = await collection.remove({ _id: ObjectId(params.id) });
+      if (!result.n) {
+        res.status(404).json({ error: 'User does not exist' });
+        return;
+      }
+      res.status(200).send('User deleted');
     } catch (error) {
       logger.error(error);
       res.status(400).json({ error: error.message });
