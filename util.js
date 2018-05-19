@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const { winstonConf } = require('./config');
 const express = require('express');
 const app = express();
@@ -12,5 +12,6 @@ const logger = winston.createLogger({
 module.exports = {
   app,
   MongoClient,
+  ObjectId,
   logger,
 };
