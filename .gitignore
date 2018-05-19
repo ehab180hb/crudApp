@@ -2,5 +2,4 @@ node_modules
 .nyc_output
 out
 coverage
-config.js
 .env
