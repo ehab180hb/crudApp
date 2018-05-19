@@ -48,7 +48,7 @@ describe('module tests', () => {
     after(async function() {
       try {
         const { cleanUp } = this;
-        await cleanUp();
+        // await cleanUp();
       } catch (error) {
         console.log(error);
         throw new Error(error);
@@ -101,7 +101,7 @@ describe('module tests', () => {
       expect(res.status).to.equal(201);
       expect(res.body)
         .to.be.instanceOf(Object)
-        .and.to.have.property('n', 1);
+        .and.to.have.property('created', true);
 
       expect(invalidRes.status).to.equal(400);
       expect(invalidRes.body)
@@ -122,7 +122,9 @@ describe('module tests', () => {
       ]);
 
       expect(res.status).to.equal(200);
-      expect(res.text).which.matches(/User info changed/);
+      expect(res.body)
+        .to.be.instanceOf(Object)
+        .and.to.have.property('updated', true);
 
       expect(wrongIdRes.status).to.equal(404);
       expect(wrongIdRes.body)
@@ -147,7 +149,9 @@ describe('module tests', () => {
       ]);
 
       expect(res.status).to.equal(200);
-      expect(res.text).to.equal('User deleted');
+      expect(res.body)
+        .to.be.instanceOf(Object)
+        .and.to.have.property('deleted', true);
 
       expect(noRes.status).to.equal(404);
       expect(noRes.body)

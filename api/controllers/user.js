@@ -64,7 +64,7 @@ module.exports = {
         return;
       }
 
-      res.status(200).send('User info changed');
+      res.status(200).json({ updated: true });
       return;
     } catch (error) {
       logger.error(error);
@@ -85,7 +85,7 @@ module.exports = {
         return;
       }
       const addedUser = await collection.insertOne({ email: body.email });
-      res.status(201).json(addedUser);
+      res.status(201).json({ created: true });
     } catch (error) {
       logger.error(error);
       res.status(400).json({ error: error.message });
@@ -103,7 +103,7 @@ module.exports = {
         res.status(404).json({ error: 'User does not exist' });
         return;
       }
-      res.status(200).send('User deleted');
+      res.status(200).json({ deleted: true });
     } catch (error) {
       logger.error(error);
       res.status(400).json({ error: error.message });
