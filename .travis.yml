@@ -6,6 +6,5 @@ services:
 install:
   - yarn global add codecov
 script:
-  - nyc report --reporter=text-lcov > coverage.lcov
+  - nyc --reporter=lcov > coverage.lcov
   - codecov
-  - yarn test
