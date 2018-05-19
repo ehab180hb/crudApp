@@ -20,10 +20,14 @@ module.exports = async function() {
           }
         });
       },
-      async cleanUp() {
+      async cleanUp(level) {
         return new Promise(async (resolve, reject) => {
           try {
             await db.dropDatabase();
+            if (level == 'light') {
+              resolve();
+              return;
+            }
             await client.close();
             resolve();
           } catch (error) {

@@ -57,12 +57,17 @@ describe('module tests', () => {
 
     it('should list all users', async function() {
       const res = await request.get('/api/v1/user/');
+      await this.cleanUp('light');
+      const badRes = await request.get('/api/v1/user/');
+
       expect(res.status).to.equal(200);
       expect(res.body)
         .to.be.instanceof(Array)
         .and.to.have.lengthOf(6)
         .and.to.have.property([5])
         .which.has.property('email', 'user5@email.com');
+
+      expect(badRes.status).to.equal(204);
     });
 
     it('should return an existing user', async () => {
@@ -107,6 +112,11 @@ describe('module tests', () => {
       expect(invalidRes.body)
         .to.have.property('error')
         .and.match(/must be a valid email/);
+
+      expect(existingRes.status).to.equal(409);
+      expect(existingRes.body)
+        .to.have.property('error')
+        .and.match(/User already exists/);
     });
 
     it('should edit user email', async () => {
@@ -116,9 +126,9 @@ describe('module tests', () => {
       const invalidNewEmail = 'user92email.com';
 
       const [res, wrongIdRes, invalidEmailRes] = await Promise.all([
-        request.put(`/api/v1/user/${id}/`).send({ email: newEmail }),
-        request.put(`/api/v1/user/${wrongId}/`).send({ email: newEmail }),
-        request.put(`/api/v1/user/${id}/`).send({ email: invalidNewEmail }),
+        request.patch(`/api/v1/user/${id}/`).send({ email: newEmail }),
+        request.patch(`/api/v1/user/${wrongId}/`).send({ email: newEmail }),
+        request.patch(`/api/v1/user/${id}/`).send({ email: invalidNewEmail }),
       ]);
 
       expect(res.status).to.equal(200);
@@ -156,7 +166,7 @@ describe('module tests', () => {
       expect(noRes.status).to.equal(404);
       expect(noRes.body)
         .to.have.property('error')
-        .and.to.match(/User does not exist/);
+        .and.to.match(/User not found/);
 
       expect(badRes.status).to.equal(400);
       expect(badRes.body)

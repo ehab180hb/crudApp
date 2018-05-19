@@ -12,8 +12,9 @@ module.exports = {
       const { DB: db } = req;
       const collection = db.collection('users');
       const users = await collection.find().toArray();
-      if (!users) {
-        res.status(204).json('There are no existing users');
+
+      if (!users.length) {
+        res.status(204).end();
         return;
       }
       res.status(200).json(users);
@@ -50,7 +51,6 @@ module.exports = {
         { _id: ObjectId(params.id) },
         { $set: { email: body.email } },
       );
-      // console.log(result.result);
 
       if (!result.n) {
         res.status(404).json({
@@ -100,7 +100,7 @@ module.exports = {
       const collection = db.collection('users');
       const { result } = await collection.remove({ _id: ObjectId(params.id) });
       if (!result.n) {
-        res.status(404).json({ error: 'User does not exist' });
+        res.status(404).json({ error: 'User not found' });
         return;
       }
       res.status(200).json({ deleted: true });

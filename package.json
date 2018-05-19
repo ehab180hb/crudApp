@@ -6,7 +6,7 @@
   "scripts": {
     "test": "NODE_ENV=test PORT=3012 mocha -s 0 --opts ./tests/mocha.opts \"./tests/**/*.test.js\"",
     "pretest": "eslint --ignore-path .gitignore .",
-    "coverage": "nyc npm test",
+    "coverage": "nyc --reporter=lcov npm test",
     "start": "node server.js",
     "dev": "NODE_ENV=development nodemon server.js"
   },
