@@ -32,9 +32,7 @@ router
    * @apiError {String} response.error The error message
    * @apiErrorExample {json} Error response:
    *  HTTPS 404 NOT FOUND
-   *  {
-   *    "error": "There are no existing users"
-   *  }
+   *  { "error": "There are no existing users" }
    */
   .get(getAllUsers)
   /**
@@ -46,22 +44,18 @@ router
    * @apiSuccess {Boolean} created A true boolean indicating success
    * @apiSuccessExample {json} Success response:
    *  HTTPS 201 CREATED
-   *  {
-   *    "created": true
-   *  }
+   *  { "created": true }
    * @apiError {Object} response The response object
    * @apiError {String} response.error The error message
    * @apiErrorExample {json} Error response:
    *  HTTPS 409 CONFLICT
-   *  {
-   *    "error": "User already exists"
-   *  }
+   *  { "error": "User already exists" }
    * @apiError {Object} response The response object
    * @apiError {String} response.error The error message
    * @apiErrorExample {json} Error response:
    *  HTTPS 400 BAD REQUEST
    *  {
-   *    "error": "ValidationError: child /"email/" fails because [/"email/" must be a valid email]"
+   *    "error": "ValidationError: child \"email\" fails because [\"email\" must be a valid email]"
    *  }
    */
   .post(addUser);
@@ -81,20 +75,18 @@ router
    *    "id": "5affe783a49ebd0355359923",
    *    "email": "user1@email.com"
    *  }
-   * apiError {Object} response Respone object
-   * apiError {String} response.error The error message.
-   * apiErrorExample {json} Error respone:
+   * @apiError {Object} response Respone object
+   * @apiError {String} response.error The error message.
+   * @apiErrorExample {json} Error respone:
    *  HTTPS 400 BAD REQUEST
    *  {
    *    "error": "ValidationError: child "email" fails because ["email" must be a valid email]"
    *  }
-   * apiError {Object} response Respone object
-   * apiError {String} response.error The error message.
-   * apiErrorExample {json} Error respone:
+   * @apiError {Object} response Respone object
+   * @apiError {String} response.error The error message.
+   * @apiErrorExample {json} Error respone:
    *  HTTPS 404 NOT FOUND
-   *  {
-   *    "error": "User not found"
-   *  }
+   *  { "error": "User not found"  }
    */
   .get(getUser)
   /**
@@ -108,25 +100,21 @@ router
    * @apiSuccessExample {json} Success response:
    *    HTTPS 200 OK
    *    { "updated": true }
-   * apiError {Object} response Respone object
-   * apiError {String} response.error The error message.
-   * apiErrorExample {json} Error respone:
+   * @apiError {Object} response Respone object
+   * @apiError {String} response.error The error message.
+   * @apiErrorExample {json} Error respone:
    *  HTTPS 404 NOT FOUND
-   *  {
    *    { "error": "User not found" }
-   *  }
-   * apiError {Object} response Respone object
-   * apiError {String} response.error The error message.
-   * apiErrorExample {json} Error respone:
+   * @apiError {Object} response Respone object
+   * @apiError {String} response.error The error message.
+   * @apiErrorExample {json} Error respone:
    *  HTTPS 400 BAD REQUEST
-   *  {
    *    { "error": "ValidationError: child \"email\" fails because [\"email\" must be a valid email]" }
-   *  }
    */
   .patch(editUser)
   /**
    * @api {delete} /api/v1/user/:id Delete user
-   * apiVersion 1.0.0
+   * @apiVersion 1.0.0
    * @apiName Delete
    * @apiGroup User
    * @apiParam {String} id User ID
@@ -134,19 +122,17 @@ router
    * @apiSuccessExample {json} Success respone:
    *    HTTPS 200 OK
    *    { "deleted": true }
-   * apiError {Object} response Respone object
-   * apiError {String} response.error The error message.
-   * apiErrorExample {json} Error respone:
+   * @apiError {Object} response Respone object
+   * @apiError {String} response.error The error message.
+   * @apiErrorExample {json} Error respone:
    *  HTTPS 404 NOT FOUND
-   *  {
    *    { "error": "User not found" }
-   *  }
-   * apiError {Object} response Respone object
-   * apiError {String} response.error The error message.
-   * apiErrorExample {json} Error respone:
+   * @apiError {Object} response Respone object
+   * @apiError {String} response.error The error message.
+   * @apiErrorExample {json} Error respone:
    *  HTTPS 400 BAD REQUEST
    *  {
-   *    { error: "ValidationError: child /"id/" fails because [/"id/" with value /"hij/" fails to match the required pattern: /^[0-9a-fA-F]{24}$/]" }
+   *    error: "ValidationError: child \"id\" fails because [\"id\" with value \"hij\" fails to match the required pattern: /^[0-9a-fA-F]{24}$/]"
    *  }
    */
   .delete(deleteUser);

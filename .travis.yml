@@ -3,3 +3,8 @@ node_js:
  - "node"
 services:
   - mongodb
+install:
+  - yarn global add codecov
+script:
+  - nyc report --reporter=text-lcov > coverage.lcov
+  - codecov

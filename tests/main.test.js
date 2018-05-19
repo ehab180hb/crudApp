@@ -48,7 +48,7 @@ describe('module tests', () => {
     after(async function() {
       try {
         const { cleanUp } = this;
-        // await cleanUp();
+        await cleanUp();
       } catch (error) {
         console.log(error);
         throw new Error(error);
