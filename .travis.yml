@@ -4,7 +4,7 @@ node_js:
 services:
   - mongodb
 install:
-  - yarn global add codecov
+  - yarn global add codecov nyc
 script:
   - nyc --reporter=lcov yarn test
   - codecov -f coverage/lcov.info
