@@ -23,8 +23,10 @@ gcloud app deploy
 ```
 
 ## To do:
-- Authentication
-- Stackdriver winston implementation
+- Validate before hitting controller
+- Passport JWT local
+- Stackdriver/datadog winston transporter
+- ts-check
 
 ## Available APIs
 
