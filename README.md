@@ -11,7 +11,7 @@ yarn dev
 
 To deploy in production:
 ```
-export MONGO_URI:"<Your MongoDB URI here>"
+export MONGO_URI="<Your MongoDB URI here>"
 yarn
 yarn start
 ```

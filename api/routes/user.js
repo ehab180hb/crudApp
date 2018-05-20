@@ -50,8 +50,6 @@ router
    * @apiErrorExample {json} Error response:
    *  HTTPS 409 CONFLICT
    *  { "error": "User already exists" }
-   * @apiError {Object} response The response object
-   * @apiError {String} response.error The error message
    * @apiErrorExample {json} Error response:
    *  HTTPS 400 BAD REQUEST
    *  {
@@ -82,8 +80,6 @@ router
    *  {
    *    "error": "ValidationError: child "email" fails because ["email" must be a valid email]"
    *  }
-   * @apiError {Object} response Respone object
-   * @apiError {String} response.error The error message.
    * @apiErrorExample {json} Error respone:
    *  HTTPS 404 NOT FOUND
    *  { "error": "User not found"  }
@@ -98,18 +94,16 @@ router
    * @apiParam {String} email User's email
    * @apiSuccess {Boolean} updated A true boolean indicating success
    * @apiSuccessExample {json} Success response:
-   *    HTTPS 200 OK
-   *    { "updated": true }
+   *  HTTPS 200 OK
+   *  { "updated": true }
    * @apiError {Object} response Respone object
    * @apiError {String} response.error The error message.
    * @apiErrorExample {json} Error respone:
    *  HTTPS 404 NOT FOUND
-   *    { "error": "User not found" }
-   * @apiError {Object} response Respone object
-   * @apiError {String} response.error The error message.
+   *  { "error": "User not found" }
    * @apiErrorExample {json} Error respone:
    *  HTTPS 400 BAD REQUEST
-   *    { "error": "ValidationError: child \"email\" fails because [\"email\" must be a valid email]" }
+   *  { "error": "ValidationError: child \"email\" fails because [\"email\" must be a valid email]" }
    */
   .patch(editUser)
   /**
@@ -120,15 +114,13 @@ router
    * @apiParam {String} id User ID
    * @apiSuccess {Boolean} deleted A true boolean indicating success
    * @apiSuccessExample {json} Success respone:
-   *    HTTPS 200 OK
-   *    { "deleted": true }
+   * HTTPS 200 OK
+   * { "deleted": true }
    * @apiError {Object} response Respone object
    * @apiError {String} response.error The error message.
    * @apiErrorExample {json} Error respone:
    *  HTTPS 404 NOT FOUND
-   *    { "error": "User not found" }
-   * @apiError {Object} response Respone object
-   * @apiError {String} response.error The error message.
+   *  { "error": "User not found" }
    * @apiErrorExample {json} Error respone:
    *  HTTPS 400 BAD REQUEST
    *  {
