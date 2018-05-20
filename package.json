@@ -6,10 +6,9 @@
   "scripts": {
     "test": "NODE_ENV=test PORT=3012 mocha -s 0 --opts ./tests/mocha.opts \"./tests/**/*.test.js\"",
     "pretest": "eslint --ignore-path .gitignore .",
-    "coverage": "nyc --reporter=lcov npm test",
+    "coverage": "nyc --reporter=lcov yarn test",
     "start": "node server.js",
-    "dev": "NODE_ENV=development nodemon server.js",
-    "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
+    "dev": "NODE_ENV=development nodemon server.js"
   },
   "author": "Ehab Khaireldin",
   "license": "MIT",

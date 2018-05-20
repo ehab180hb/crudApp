@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.org/ehab180hb/crudApp.svg?branch=master)](https://travis-ci.org/ehab180hb/crudApp)
-[![codecov](https://codecov.io/gh/ehab180hb/crudApp/branch/master/graph/badge.svg)](https://codecov.io/gh/ehab180hb/crudApp)
 
 
 #  Basic CRUD API
