@@ -1,5 +1,4 @@
 const { logger, ObjectId } = require('../../util');
-const validate = require('../handlers/user/validation');
 
 module.exports = {
   async getAllUsers(req, res) {
@@ -20,10 +19,7 @@ module.exports = {
   },
   async getUser(req, res) {
     try {
-      const { params } = req;
-      const valid = validate({ id: params.id }, 'getUser');
-      if (valid.error) throw new Error(valid.error);
-      const { DB: db } = req;
+      const { params, DB: db } = req;
       const collection = db.collection('users');
       const userInfo = await collection.findOne(ObjectId(params.id));
       if (!userInfo) {
@@ -39,8 +35,6 @@ module.exports = {
   async editUser(req, res) {
     try {
       const { DB: db, body, params } = req;
-      const valid = validate({ id: params.id, email: body.email }, 'editUser');
-      if (valid.error) throw new Error(valid.error);
       const collection = db.collection('users');
       const { result } = await collection.updateOne(
         { _id: ObjectId(params.id) },
@@ -69,9 +63,6 @@ module.exports = {
   async addUser(req, res) {
     try {
       const { DB: db, body } = req;
-      const valid = validate(body, 'addUser');
-
-      if (valid.error) throw new Error(valid.error);
       const collection = db.collection('users');
 
       const existsAlready = await collection.findOne({ email: body.email });
@@ -90,8 +81,6 @@ module.exports = {
   async deleteUser(req, res) {
     try {
       const { DB: db, params } = req;
-      const valid = validate(params, 'deleteUser');
-      if (valid.error) throw new Error(valid.error);
       const collection = db.collection('users');
       const { result } = await collection.remove({ _id: ObjectId(params.id) });
       if (!result.n) {

@@ -1,12 +1,17 @@
 const Joi = require('joi');
 
-const id = Joi.string().regex(/^[0-9a-fA-F]{24}$/);
-const email = Joi.string().email();
+const id = Joi.string()
+  .regex(/^[0-9a-fA-F]{24}$/)
+  .error(new Error('Invalid ID, must be a string of 24 hex characters'));
+const email = Joi.string()
+  .email()
+  .error(new Error('Invalid email format'));
+const password = Joi.string().error(new Error('Invalid password format'));
 
 const schemas = {
-  getUser: Joi.object()
-    .keys({ id: id.required() })
-    .required(),
+  id: Joi.object().keys({
+    id: id.required(),
+  }),
 
   addUser: Joi.object()
     .keys({ email: email.required() })
@@ -14,16 +19,24 @@ const schemas = {
 
   editUser: Joi.object()
     .keys({
-      id: id.required(),
       email: email.required(),
     })
     .required(),
-
-  deleteUser: Joi.object()
-    .keys({ id: id.required() })
-    .required(),
 };
 
-module.exports = (input, type) => {
-  return Joi.validate(input, schemas[type]);
+module.exports = {
+  validateBody: schemaType => (req, res, next) => {
+    const result = Joi.validate(req.body, schemas[schemaType]);
+    if (result.error) return res.status(400).send(result.error.message);
+    if (!req.value) req.value = {};
+    req.value['body'] = result.value;
+    next();
+  },
+  validateParamId: (req, res, next) => {
+    const result = Joi.validate(req.params, schemas.id);
+    if (result.error) return res.status(400).send(result.error.message);
+    if (!req.value) req.value = {};
+    req.value['params'] = result.value;
+    next();
+  },
 };

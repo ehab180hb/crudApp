@@ -48,7 +48,7 @@ describe('module tests', () => {
     after(async function() {
       try {
         const { cleanUp } = this;
-        await cleanUp();
+        // await cleanUp();
       } catch (error) {
         console.log(error);
         throw new Error(error);
@@ -88,9 +88,10 @@ describe('module tests', () => {
       expect(noRes.body).to.have.property('error', 'User does not exist');
 
       expect(invalidRes.status).to.equal(400);
-      expect(invalidRes.body)
-        .to.have.property('error')
-        .that.match(/ValidationError/);
+
+      expect(invalidRes.text).to.equal(
+        'Invalid ID, must be a string of 24 hex characters',
+      );
     });
 
     it('should add a new user', async () => {
@@ -109,9 +110,7 @@ describe('module tests', () => {
         .and.to.have.property('created', true);
 
       expect(invalidRes.status).to.equal(400);
-      expect(invalidRes.body)
-        .to.have.property('error')
-        .and.match(/must be a valid email/);
+      expect(invalidRes.text).to.equal('Invalid email format');
 
       expect(existingRes.status).to.equal(409);
       expect(existingRes.body)
@@ -142,9 +141,7 @@ describe('module tests', () => {
         .which.matches(/User not found/);
 
       expect(invalidEmailRes.status).to.equal(400);
-      expect(invalidEmailRes.body)
-        .to.have.property('error')
-        .which.matches(/must be a valid email/);
+      expect(invalidEmailRes.text).to.equal('Invalid email format');
     });
 
     it('should delete a user', async () => {
@@ -169,9 +166,9 @@ describe('module tests', () => {
         .and.to.match(/User not found/);
 
       expect(badRes.status).to.equal(400);
-      expect(badRes.body)
-        .to.have.property('error')
-        .and.to.match(/ValidationError/);
+      expect(badRes.text).to.equal(
+        'Invalid ID, must be a string of 24 hex characters',
+      );
     });
   });
 });

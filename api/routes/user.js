@@ -1,5 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const {
+  validateBody,
+  validateParamId,
+} = require('../handlers/user/validation');
 
 const {
   getAllUsers,
@@ -56,7 +60,7 @@ router
    *    "error": "ValidationError: child \"email\" fails because [\"email\" must be a valid email]"
    *  }
    */
-  .post(addUser);
+  .post(validateBody('addUser'), addUser);
 
 router
   .route('/:id/')
@@ -84,7 +88,7 @@ router
    *  HTTPS 404 NOT FOUND
    *  { "error": "User not found"  }
    */
-  .get(getUser)
+  .get(validateParamId, getUser)
   /**
    * @api {patch} /api/v1/user/:id Update user
    * @apiVersion 1.0.0
@@ -105,7 +109,7 @@ router
    *  HTTPS 400 BAD REQUEST
    *  { "error": "ValidationError: child \"email\" fails because [\"email\" must be a valid email]" }
    */
-  .patch(editUser)
+  .patch(validateParamId, validateBody('editUser'), editUser)
   /**
    * @api {delete} /api/v1/user/:id Delete user
    * @apiVersion 1.0.0
@@ -127,6 +131,6 @@ router
    *    error: "ValidationError: child \"id\" fails because [\"id\" with value \"hij\" fails to match the required pattern: /^[0-9a-fA-F]{24}$/]"
    *  }
    */
-  .delete(deleteUser);
+  .delete(validateParamId, deleteUser);
 
 module.exports = router;
