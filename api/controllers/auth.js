@@ -2,12 +2,8 @@ const JWT = require('jsonwebtoken');
 
 module.exports = {
   async signUp(req, res, next) {
-    console.log('signUp()');
+    const { email, password } = req.value.body;
   },
-  async signIn(req, res, next) {
-    console.log('signIn()');
-  },
-  async secret(req, res, next) {
-    console.log('secret()');
-  },
+  async signIn(req, res, next) {},
+  async secret(req, res, next) {},
 };

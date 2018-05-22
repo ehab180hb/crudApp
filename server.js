@@ -1,8 +1,9 @@
-const { app, MongoClient, logger } = require('./util');
-const { expressConf, mongoConf } = require('./config');
+const { app, logger } = require('./util');
+const { expressConf } = require('./config');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const apiRoutes = require('./api/routes/index');
+const routes = require('./api/routes/index');
+const modules = require('./api/modules/index');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -10,22 +11,15 @@ app.use(bodyParser.json());
 if (app.get('env') == 'development') app.use(morgan('tiny'));
 
 (async function() {
-  const { uri, dbName } = mongoConf;
-  const client = await MongoClient.connect(uri, { useNewUrlParser: true });
-  const db = client.db(dbName);
+  const dbModules = await modules();
 
-  app.use(async (req, res, next) => {
-    try {
-      req.DB = db;
-      next();
-    } catch (error) {
-      logger.error(error);
-    }
+  app.use((req, res, next) => {
+    req.dbModules = dbModules;
+    next();
   });
-
-  for (let route in apiRoutes) {
+  for (let route in routes) {
     logger.info(`Attaching route: /api/v1/${route}`);
-    app.use(`/api/v1/${route}`, apiRoutes[route]);
+    app.use(`/api/v1/${route}`, routes[route]);
   }
 
   const listener = app.listen(expressConf.port);

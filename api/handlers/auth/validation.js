@@ -1,7 +1,9 @@
 const Joi = require('joi');
 
-const email = Joi.string().email();
-const password = Joi.string();
+const email = Joi.string()
+  .email()
+  .error(new Error('Invalid email format'));
+const password = Joi.string().error(new Error('Invalid password format'));
 
 const schemas = {
   auth: Joi.object()

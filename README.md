@@ -23,8 +23,8 @@ gcloud app deploy
 ```
 
 ## To do:
-- Validate before hitting controller
-- Passport JWT local
+- Passport JWT
+- Auth0 implementation
 - Stackdriver/datadog winston transporter
 - ts-check
 
