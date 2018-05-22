@@ -5,6 +5,8 @@ const id = Joi.string()
   .error(new Error('Invalid ID, must be a string of 24 hex characters'));
 const email = Joi.string()
   .email()
+  .lowercase()
+  .trim()
   .error(new Error('Invalid email format'));
 const password = Joi.string().error(new Error('Invalid password format'));
 
@@ -27,14 +29,20 @@ const schemas = {
 module.exports = {
   validateBody: schemaType => (req, res, next) => {
     const result = Joi.validate(req.body, schemas[schemaType]);
-    if (result.error) return res.status(400).send(result.error.message);
+    if (result.error)
+      return res.status(400).json({
+        error: result.error.message,
+      });
     if (!req.value) req.value = {};
     req.value['body'] = result.value;
     next();
   },
   validateParamId: (req, res, next) => {
     const result = Joi.validate(req.params, schemas.id);
-    if (result.error) return res.status(400).send(result.error.message);
+    if (result.error)
+      return res.status(400).json({
+        error: result.error.message,
+      });
     if (!req.value) req.value = {};
     req.value['params'] = result.value;
     next();

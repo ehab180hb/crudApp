@@ -21,7 +21,7 @@ describe('module tests', () => {
     });
   });
 
-  describe('CRUDs', function() {
+  describe('APIs', function() {
     before(async function() {
       try {
         const { refreshCollection, cleanUp } = await setupTear();
@@ -48,127 +48,167 @@ describe('module tests', () => {
     after(async function() {
       try {
         const { cleanUp } = this;
-        // await cleanUp();
+        await cleanUp();
       } catch (error) {
         console.log(error);
         throw new Error(error);
       }
     });
+    describe('authentecation', function() {
+      it('should sign a token for new signups', async function() {
+        const email = 'user10@email.com';
+        const badEmail = 'user99email.com';
+        const existingEmail = 'user1@email.com';
+        const password = 'abc123efg';
 
-    it('should list all users', async function() {
-      const res = await request.get('/api/v1/user/');
-      await this.cleanUp('light');
-      const badRes = await request.get('/api/v1/user/');
+        const [res, badRes, existingRes] = await Promise.all([
+          request.post('/api/v1/auth/signup').send({ email, password }),
+          request
+            .post('/api/v1/auth/signup')
+            .send({ email: badEmail, password }),
+          request
+            .post('/api/v1/auth/signup')
+            .send({ email: existingEmail, password }),
+        ]);
 
-      expect(res.status).to.equal(200);
-      expect(res.body)
-        .to.be.instanceof(Array)
-        .and.to.have.lengthOf(6)
-        .and.to.have.property([5])
-        .which.has.property('email', 'user5@email.com');
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property('token');
 
-      expect(badRes.status).to.equal(204);
+        expect(badRes.status).to.equal(400);
+        expect(badRes.body).to.have.property('error', 'Invalid email format');
+
+        expect(existingRes.status).to.equal(409);
+        expect(existingRes.body).to.have.property(
+          'error',
+          'User already exists',
+        );
+      });
     });
 
-    it('should return an existing user', async () => {
-      const id = '5affe783a49ebd0355359923';
-      const noId = '5affe783a49ebd0355359920';
-      const invalidId = 'abc';
-      const [res, noRes, invalidRes] = await Promise.all([
-        request.get(`/api/v1/user/${id}/`),
-        request.get(`/api/v1/user/${noId}/`),
-        request.get(`/api/v1/user/${invalidId}/`),
-      ]);
-      expect(res.status).to.equal(200);
-      expect(res.body)
-        .to.be.instanceOf(Object)
-        .and.to.have.property('email', 'user1@email.com');
+    describe('CRUDs', function() {
+      it('should list all users', async function() {
+        const res = await request.get('/api/v1/user/');
+        await this.cleanUp('light');
+        const badRes = await request.get('/api/v1/user/');
 
-      expect(noRes.status).to.equal(404);
-      expect(noRes.body).to.have.property('error', 'User does not exist');
+        expect(res.status).to.equal(200);
+        expect(res.body)
+          .to.be.instanceof(Array)
+          .and.to.have.lengthOf(6)
+          .and.to.have.property([5])
+          .which.has.property('email', 'user5@email.com');
 
-      expect(invalidRes.status).to.equal(400);
+        expect(badRes.status).to.equal(204);
+      });
 
-      expect(invalidRes.text).to.equal(
-        'Invalid ID, must be a string of 24 hex characters',
-      );
-    });
+      it('should return an existing user', async () => {
+        const id = '5affe783a49ebd0355359923';
+        const noId = '5affe783a49ebd0355359920';
+        const invalidId = 'abc';
+        const [res, noRes, invalidRes] = await Promise.all([
+          request.get(`/api/v1/user/${id}/`),
+          request.get(`/api/v1/user/${noId}/`),
+          request.get(`/api/v1/user/${invalidId}/`),
+        ]);
+        expect(res.status).to.equal(200);
+        expect(res.body)
+          .to.be.instanceOf(Object)
+          .and.to.have.property('email', 'user1@email.com');
 
-    it('should add a new user', async () => {
-      const email = 'user6@email.com';
-      const invalidEmail = 'user7email,com';
-      const existingEmail = 'user5@email.com';
-      const [res, invalidRes, existingRes] = await Promise.all([
-        request.post('/api/v1/user/').send({ email }),
-        request.post('/api/v1/user/').send({ email: invalidEmail }),
-        request.post('/api/v1/user/').send({ email: existingEmail }),
-      ]);
+        expect(noRes.status).to.equal(404);
+        expect(noRes.body).to.have.property('error', 'User does not exist');
 
-      expect(res.status).to.equal(201);
-      expect(res.body)
-        .to.be.instanceOf(Object)
-        .and.to.have.property('created', true);
+        expect(invalidRes.status).to.equal(400);
 
-      expect(invalidRes.status).to.equal(400);
-      expect(invalidRes.text).to.equal('Invalid email format');
+        expect(invalidRes.body).to.have.property(
+          'error',
+          'Invalid ID, must be a string of 24 hex characters',
+        );
+      });
 
-      expect(existingRes.status).to.equal(409);
-      expect(existingRes.body)
-        .to.have.property('error')
-        .and.match(/User already exists/);
-    });
+      it('should add a new user', async () => {
+        const email = 'user6@email.com';
+        const invalidEmail = 'user7email,com';
+        const existingEmail = 'user5@email.com';
+        const [res, invalidRes, existingRes] = await Promise.all([
+          request.post('/api/v1/user/').send({ email }),
+          request.post('/api/v1/user/').send({ email: invalidEmail }),
+          request.post('/api/v1/user/').send({ email: existingEmail }),
+        ]);
 
-    it('should edit user email', async () => {
-      const id = '5affe783a49ebd0355359963';
-      const wrongId = '5affe783a49ebd0355359964';
-      const newEmail = 'user8@email.com';
-      const invalidNewEmail = 'user92email.com';
+        expect(res.status).to.equal(201);
+        expect(res.body)
+          .to.be.instanceOf(Object)
+          .and.to.have.property('created', true);
 
-      const [res, wrongIdRes, invalidEmailRes] = await Promise.all([
-        request.patch(`/api/v1/user/${id}/`).send({ email: newEmail }),
-        request.patch(`/api/v1/user/${wrongId}/`).send({ email: newEmail }),
-        request.patch(`/api/v1/user/${id}/`).send({ email: invalidNewEmail }),
-      ]);
+        expect(invalidRes.status).to.equal(400);
+        expect(invalidRes.body).to.have.property(
+          'error',
+          'Invalid email format',
+        );
 
-      expect(res.status).to.equal(200);
-      expect(res.body)
-        .to.be.instanceOf(Object)
-        .and.to.have.property('updated', true);
+        expect(existingRes.status).to.equal(409);
+        expect(existingRes.body)
+          .to.have.property('error')
+          .and.match(/User already exists/);
+      });
 
-      expect(wrongIdRes.status).to.equal(404);
-      expect(wrongIdRes.body)
-        .to.have.property('error')
-        .which.matches(/User not found/);
+      it('should edit user email', async () => {
+        const id = '5affe783a49ebd0355359963';
+        const wrongId = '5affe783a49ebd0355359964';
+        const newEmail = 'user8@email.com';
+        const invalidNewEmail = 'user92email.com';
 
-      expect(invalidEmailRes.status).to.equal(400);
-      expect(invalidEmailRes.text).to.equal('Invalid email format');
-    });
+        const [res, wrongIdRes, invalidEmailRes] = await Promise.all([
+          request.patch(`/api/v1/user/${id}/`).send({ email: newEmail }),
+          request.patch(`/api/v1/user/${wrongId}/`).send({ email: newEmail }),
+          request.patch(`/api/v1/user/${id}/`).send({ email: invalidNewEmail }),
+        ]);
 
-    it('should delete a user', async () => {
-      const id = '5affe783a49ebd0355359923';
-      const noId = '5affe783a49ebd0355359951';
-      const badId = 'hij';
+        expect(res.status).to.equal(200);
+        expect(res.body)
+          .to.be.instanceOf(Object)
+          .and.to.have.property('updated', true);
 
-      const [res, noRes, badRes] = await Promise.all([
-        request.delete(`/api/v1/user/${id}/`),
-        request.delete(`/api/v1/user/${noId}/`),
-        request.delete(`/api/v1/user/${badId}/`),
-      ]);
+        expect(wrongIdRes.status).to.equal(404);
+        expect(wrongIdRes.body)
+          .to.have.property('error')
+          .which.matches(/User not found/);
 
-      expect(res.status).to.equal(200);
-      expect(res.body)
-        .to.be.instanceOf(Object)
-        .and.to.have.property('deleted', true);
+        expect(invalidEmailRes.status).to.equal(400);
+        expect(invalidEmailRes.body).to.have.property(
+          'error',
+          'Invalid email format',
+        );
+      });
 
-      expect(noRes.status).to.equal(404);
-      expect(noRes.body)
-        .to.have.property('error')
-        .and.to.match(/User not found/);
+      it('should delete a user', async () => {
+        const id = '5affe783a49ebd0355359923';
+        const noId = '5affe783a49ebd0355359951';
+        const badId = 'hij';
 
-      expect(badRes.status).to.equal(400);
-      expect(badRes.text).to.equal(
-        'Invalid ID, must be a string of 24 hex characters',
-      );
+        const [res, noRes, badRes] = await Promise.all([
+          request.delete(`/api/v1/user/${id}/`),
+          request.delete(`/api/v1/user/${noId}/`),
+          request.delete(`/api/v1/user/${badId}/`),
+        ]);
+
+        expect(res.status).to.equal(200);
+        expect(res.body)
+          .to.be.instanceOf(Object)
+          .and.to.have.property('deleted', true);
+
+        expect(noRes.status).to.equal(404);
+        expect(noRes.body)
+          .to.have.property('error')
+          .and.to.match(/User not found/);
+
+        expect(badRes.status).to.equal(400);
+        expect(badRes.body).to.have.property(
+          'error',
+          'Invalid ID, must be a string of 24 hex characters',
+        );
+      });
     });
   });
 });

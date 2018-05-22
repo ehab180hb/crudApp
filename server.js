@@ -24,8 +24,4 @@ if (app.get('env') == 'development') app.use(morgan('tiny'));
 
   const listener = app.listen(expressConf.port);
   logger.info(`listening on port ${listener.address().port}`);
-
-  process.on('exit', async () => {
-    await client.close();
-  });
 })();

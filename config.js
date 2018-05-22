@@ -8,6 +8,9 @@ const mongoUri =
     ? `mongodb://127.0.0.1:27017/testingMongoCrud`
     : process.env.MONGO_URI;
 
+const tokenSecret =
+  isDev || isTesting ? 'A3.Fw;+T~.$@fo' : process.env.TOKEN_SECRET;
+
 module.exports = {
   mongoConf: {
     uri: mongoUri,
@@ -16,4 +19,5 @@ module.exports = {
   expressConf: {
     port: process.env.PORT || 3000,
   },
+  tokenSecret,
 };
