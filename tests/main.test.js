@@ -7,6 +7,7 @@ const supertest = require('supertest');
 describe('module tests', () => {
   let app;
   let request;
+  let setupFunctions;
 
   before(function() {
     app = server.__get__('app');
@@ -24,9 +25,7 @@ describe('module tests', () => {
   describe('APIs', function() {
     before(async function() {
       try {
-        const { refreshCollection, cleanUp } = await setupTear();
-        this.refreshCollection = refreshCollection;
-        this.cleanUp = cleanUp;
+        setupFunctions = await setupTear();
       } catch (error) {
         console.log(error);
 
@@ -36,9 +35,8 @@ describe('module tests', () => {
 
     beforeEach(async function() {
       try {
-        const { refreshCollection } = this;
         const userObjects = require('./data/users');
-        await refreshCollection('users', userObjects);
+        await setupFunctions.refreshCollection('users', userObjects);
       } catch (error) {
         console.log(error);
         throw new Error(error);
@@ -47,8 +45,7 @@ describe('module tests', () => {
 
     after(async function() {
       try {
-        const { cleanUp } = this;
-        await cleanUp();
+        await setupFunctions.cleanUp();
       } catch (error) {
         console.log(error);
         throw new Error(error);
@@ -83,12 +80,14 @@ describe('module tests', () => {
           'User already exists',
         );
       });
+
+      it('peroperly manage access to protected resources', async function() {});
     });
 
     describe('CRUDs', function() {
       it('should list all users', async function() {
         const res = await request.get('/api/v1/user/');
-        await this.cleanUp('light');
+        await setupFunctions.cleanUp('light');
         const badRes = await request.get('/api/v1/user/');
 
         expect(res.status).to.equal(200);

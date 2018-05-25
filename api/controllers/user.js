@@ -1,4 +1,4 @@
-const { logger, ObjectId } = require('../../util');
+const { logger } = require('../../util');
 
 module.exports = {
   async getAllUsers(req, res) {
@@ -14,7 +14,7 @@ module.exports = {
   },
   async getUser(req, res) {
     try {
-      const { User } = req.dbModules;
+      const { User, ObjectId } = req.dbModules;
       const { id } = req.value.params;
       const userInfo = await User.findOne(ObjectId(id));
       if (!userInfo)
@@ -27,7 +27,7 @@ module.exports = {
   },
   async editUser(req, res) {
     try {
-      const { User } = req.dbModules;
+      const { User, ObjectId } = req.dbModules;
       const { id } = req.value.params;
       const { email } = req.value.body;
       const { result } = await User.updateOne(
@@ -62,7 +62,7 @@ module.exports = {
 
   async deleteUser(req, res) {
     try {
-      const { User } = req.dbModules;
+      const { User, ObjectId } = req.dbModules;
       const { id } = req.value.params;
       const { result } = await User.remove({ _id: ObjectId(id) });
       if (!result.n) return res.status(404).json({ error: 'User not found' });

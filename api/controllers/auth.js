@@ -10,5 +10,7 @@ module.exports = {
     res.status(200).json({ token });
   },
   async signIn(req, res, next) {},
-  async secret(req, res, next) {},
+  async secret(req, res, next) {
+    res.status(200).send('cool');
+  },
 };

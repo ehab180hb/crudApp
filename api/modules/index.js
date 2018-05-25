@@ -1,5 +1,5 @@
 const { mongoConf } = require('../../config');
-const { MongoClient } = require('../../util');
+const { MongoClient, ObjectId } = require('../../util');
 
 const userModule = require('./user');
 
@@ -11,6 +11,7 @@ module.exports = async () => {
     await client.close();
   });
   return {
+    ObjectId,
     User: userModule(db),
   };
 };
