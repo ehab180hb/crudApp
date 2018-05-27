@@ -11,15 +11,20 @@ yarn dev
 
 To deploy in production:
 ```
-export MONGO_URI="<Your MongoDB URI here>"
+export NODE_ENV="production" MONGO_URI="<Your MongoDB URI here>" TOKEN_SECRET="<Your token secret here>"
 yarn
 yarn start
 ```
 
 The API is Google App Engine-ready:
 ```
-echo "MONGO_URI=\"<Your MongoDB URI here>\"" >> .env
+echo "MONGO_URI=\"<Your MongoDB URI here>\"\nTOKEN_SECRET=\"<Your token secret here>\"" > .env
 gcloud app deploy
+```
+
+Genereate HTML API documentation:
+```
+apidoc -i api/routes
 ```
 
 ## To do:
@@ -30,6 +35,10 @@ gcloud app deploy
 
 ## Available APIs
 
+
+- [Auth](#auth)
+	- [Register a new user](#register-a-new-user)
+	
 - [User](#user)
 	- [Create a new user](#create-a-new-user)
 	- [Delete user](#delete-user)
@@ -39,6 +48,45 @@ gcloud app deploy
 	
 
 
+# Auth
+
+## Register a new user
+
+
+
+	POST /api/v1/auth/signup
+
+
+### Parameters
+
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| email			| String			|  User's email							|
+
+### Success Response
+
+Success response:
+
+```
+HTTPS 201 CREATED
+{ "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzb21lYXBwIiwic3ViIjoiNWIwN2RjYjdjMjY2YzQ3ZDQyMzkxOGNkIiwiaWF0IjoxNTI3MjQxOTEyMDQ5fQ.zjjhDvajp3rdW3Yb5OjaP-ufla-SmWcplhKbY9eEZsM" }
+```
+### Error Response
+
+Error response:
+
+```
+HTTPS 409 CONFLICT
+{ "error": "User already exists" }
+```
+Error response:
+
+```
+HTTPS 400 BAD REQUEST
+{
+  "error": "Invalid email format"
+}
+```
 # User
 
 ## Create a new user
@@ -75,7 +123,7 @@ Error response:
 ```
 HTTPS 400 BAD REQUEST
 {
-  "error": "ValidationError: child \"email\" fails because [\"email\" must be a valid email]"
+  "error": "Invalid email format"
 }
 ```
 ## Delete user
@@ -105,14 +153,14 @@ Error respone:
 
 ```
 HTTPS 404 NOT FOUND
-  { "error": "User not found" }
+{ "error": "User not found" }
 ```
 Error respone:
 
 ```
 HTTPS 400 BAD REQUEST
 {
-  error: "ValidationError: child \"id\" fails because [\"id\" with value \"hij\" fails to match the required pattern: /^[0-9a-fA-F]{24}$/]"
+  error: "Invalid ID, must be a string of 24 hex characters"
 }
 ```
 ## Get all users
@@ -170,7 +218,7 @@ Error respone:
 ```
 HTTPS 400 BAD REQUEST
 {
-  "error": "ValidationError: child "email" fails because ["email" must be a valid email]"
+  "error": "Invalid email format"
 }
 ```
 Error respone:
@@ -207,12 +255,11 @@ Error respone:
 
 ```
 HTTPS 404 NOT FOUND
-  { "error": "User not found" }
+{ "error": "User not found" }
 ```
 Error respone:
 
 ```
 HTTPS 400 BAD REQUEST
-  { "error": "ValidationError: child \"email\" fails because [\"email\" must be a valid email]" }
+{ "error": "Invalid email format" }
 ```
-

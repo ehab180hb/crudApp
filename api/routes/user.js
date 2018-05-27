@@ -57,7 +57,7 @@ router
    * @apiErrorExample {json} Error response:
    *  HTTPS 400 BAD REQUEST
    *  {
-   *    "error": "ValidationError: child \"email\" fails because [\"email\" must be a valid email]"
+   *    "error": "Invalid email format"
    *  }
    */
   .post(validateBody('addUser'), addUser);
@@ -82,7 +82,7 @@ router
    * @apiErrorExample {json} Error respone:
    *  HTTPS 400 BAD REQUEST
    *  {
-   *    "error": "ValidationError: child "email" fails because ["email" must be a valid email]"
+   *    "error": "Invalid email format"
    *  }
    * @apiErrorExample {json} Error respone:
    *  HTTPS 404 NOT FOUND
@@ -107,7 +107,7 @@ router
    *  { "error": "User not found" }
    * @apiErrorExample {json} Error respone:
    *  HTTPS 400 BAD REQUEST
-   *  { "error": "ValidationError: child \"email\" fails because [\"email\" must be a valid email]" }
+   *  { "error": "Invalid email format" }
    */
   .patch(validateParamId, validateBody('editUser'), editUser)
   /**
@@ -128,7 +128,7 @@ router
    * @apiErrorExample {json} Error respone:
    *  HTTPS 400 BAD REQUEST
    *  {
-   *    error: "ValidationError: child \"id\" fails because [\"id\" with value \"hij\" fails to match the required pattern: /^[0-9a-fA-F]{24}$/]"
+   *    error: "Invalid ID, must be a string of 24 hex characters"
    *  }
    */
   .delete(validateParamId, deleteUser);

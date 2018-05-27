@@ -1,5 +1,7 @@
+const { version } = require('../../package.json');
+const runningEnv = process.env.NODE_ENV;
 module.exports = {
-  getHealthCheck: function getHealthCheck(req, res) {
-    res.status(200).json({ ok: 1 });
+  getHealthCheck(req, res) {
+    res.status(200).json({ ok: 1, version, runningEnv });
   },
 };

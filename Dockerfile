@@ -1,6 +1,8 @@
 FROM node:carbon
+LABEL maintainer="ehabkhaireldin@gmail.com"
 WORKDIR /user/src/app
 COPY package*.json ./
-RUN npm install
+ENV NODE_ENV=production 
+RUN yarn
 COPY . .
-CMD ["npm", "start"]
+CMD ["yarn", "start"]

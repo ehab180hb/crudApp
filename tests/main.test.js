@@ -17,8 +17,14 @@ describe('module tests', () => {
   describe('health check', function() {
     it('should pass the initial health check', async () => {
       const res = await request.get('/api/v1/healthCheck');
+      const { version } = require('../package.json');
+
       expect(res.status).to.equal(200);
-      expect(res.body).to.have.property('ok', 1);
+      expect(res.body).to.include({
+        ok: 1,
+        version,
+        runningEnv: process.env.NODE_ENV,
+      });
     });
   });
 
