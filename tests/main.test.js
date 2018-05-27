@@ -74,7 +74,7 @@ describe('module tests', () => {
             .send({ email: existingEmail, password }),
         ]);
 
-        expect(res.status).to.equal(200);
+        expect(res.status).to.equal(201);
         expect(res.body).to.have.property('token');
 
         expect(badRes.status).to.equal(400);
