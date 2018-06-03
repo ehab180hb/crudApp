@@ -24,11 +24,10 @@ gcloud app deploy
 
 Genereate HTML API documentation:
 ```
-apidoc -i api/routes
+yarn doc
 ```
 
 ## To do:
-- Passport JWT
 - Auth0 implementation
 - Stackdriver/datadog winston transporter
 - ts-check
@@ -37,6 +36,8 @@ apidoc -i api/routes
 
 
 - [Auth](#auth)
+	- [Test authorization](#test-authorization)
+	- [Signin and refresh token](#signin-and-refresh-token)
 	- [Register a new user](#register-a-new-user)
 	
 - [User](#user)
@@ -50,6 +51,71 @@ apidoc -i api/routes
 
 # Auth
 
+## Test authorization
+
+
+
+	GET /api/v1/auth/secret
+
+### Headers
+
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| authorization			| String			|  User's authentication token							|
+
+### Success Response
+
+Success response:
+
+```
+HTTPS 200 OK
+{ "ok": 1 }
+```
+### Error Response
+
+Error response:
+
+```
+HTTPS 401 Unauthorized
+"Unauthorized"
+```
+## Signin and refresh token
+
+
+
+	POST /api/v1/auth/signin
+
+
+### Parameters
+
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| email			| String			|  User's email							|
+
+### Success Response
+
+Success response:
+
+```
+HTTPS 200 OK
+{ "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzb21lYXBwIiwic3ViIjoiNWIwN2RjYjdjMjY2YzQ3ZDQyMzkxOGNkIiwiaWF0IjoxNTI3MjQxOTEyMDQ5fQ.zjjhDvajp3rdW3Yb5OjaP-ufla-SmWcplhKbY9eEZsM" }
+```
+### Error Response
+
+Error response:
+
+```
+HTTPS 401 Unauthorized
+"Unauthorized"
+```
+Error response:
+
+```
+HTTPS 400 BAD REQUEST
+{
+  "error": "Invalid email format"
+}
+```
 ## Register a new user
 
 
@@ -263,3 +329,4 @@ Error respone:
 HTTPS 400 BAD REQUEST
 { "error": "Invalid email format" }
 ```
+

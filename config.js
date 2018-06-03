@@ -16,7 +16,6 @@ const tokenSecret = !env.isProd ? 'A3.Fw;+T~.$@fo' : process.env.TOKEN_SECRET;
 function requiredEnvs(envsArr) {
   envsArr.forEach(env => {
     if (!process.env[env]) {
-      console.log(env);
       throw `missing enviroment variable ${env}`;
     }
   });

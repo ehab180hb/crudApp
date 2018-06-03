@@ -33,8 +33,6 @@ describe('module tests', () => {
       try {
         setupFunctions = await setupTear();
       } catch (error) {
-        console.log(error);
-
         throw new Error(error);
       }
     });
@@ -44,7 +42,6 @@ describe('module tests', () => {
         const userObjects = require('./data/users');
         await setupFunctions.refreshCollection('users', userObjects);
       } catch (error) {
-        console.log(error);
         throw new Error(error);
       }
     });
@@ -53,7 +50,6 @@ describe('module tests', () => {
       try {
         await setupFunctions.cleanUp();
       } catch (error) {
-        console.log(error);
         throw new Error(error);
       }
     });
@@ -87,7 +83,41 @@ describe('module tests', () => {
         );
       });
 
-      it('peroperly manage access to protected resources', async function() {});
+      it('should allow a user to sign up, sign in and access protected resources ', async function() {
+        const email = 'user11@email.com';
+        const password = 'abc123efg';
+        const noPasseord = '';
+        const wrongPassord = 'hij456klm';
+
+        const singupRes = await request
+          .post('/api/v1/auth/signup')
+          .send({ email, password });
+
+        expect(singupRes.body).to.have.property('token');
+
+        const [singinRes, noSinginRes, wrongSigninRes] = await Promise.all([
+          request.post('/api/v1/auth/signin').send({ email, password }),
+          request
+            .post('/api/v1/auth/signin')
+            .send({ email, password: noPasseord }),
+          request
+            .post('/api/v1/auth/signin')
+            .send({ email, password: wrongPassord }),
+        ]);
+
+        expect(singinRes.body).to.have.property('token');
+        expect(noSinginRes.body).to.have.property(
+          'error',
+          'Invalid password format',
+        );
+        expect(wrongSigninRes.text).to.equal('Unauthorized');
+
+        const protectedEndpoint = await request
+          .get('/api/v1/auth/secret')
+          .set('authorization', singinRes.body.token);
+
+        expect(protectedEndpoint.body).to.have.property('ok', 1);
+      });
     });
 
     describe('CRUDs', function() {

@@ -8,11 +8,14 @@
     "pretest": "eslint --ignore-path .gitignore .",
     "coverage": "nyc --reporter=lcov yarn test",
     "start": "node server.js",
-    "dev": "NODE_ENV=development nodemon server.js"
+    "dev": "NODE_ENV=development nodemon server.js",
+    "doc": "apidoc apidoc -i api/routes && apidoc-markdown -p doc -o doc/docs.md"
   },
   "author": "Ehab Khaireldin",
   "license": "MIT",
   "devDependencies": {
+    "apidoc": "^0.17.6",
+    "apidoc-markdown": "^0.2.0",
     "chai": "^4.1.2",
     "eslint": "4.19.1",
     "eslint-config-prettier": "^2.9.0",
@@ -26,6 +29,7 @@
   },
   "dependencies": {
     "@google-cloud/logging-winston": "^0.9.0",
+    "bcryptjs": "^2.4.3",
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
     "joi": "^13.3.0",
@@ -35,6 +39,7 @@
     "morgan": "^1.9.0",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
     "winston": "^3.0.0-rc5",
     "winston-old": "npm:winston@2.4.2"
   }

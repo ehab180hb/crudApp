@@ -26,8 +26,6 @@ if (app.get('env') == 'development') app.use(morgan('tiny'));
     const listener = app.listen(expressConf.port);
     logger.info(`listening on port ${listener.address().port}`);
   } catch (error) {
-    console.log(error);
-
     throw new Error(error);
   }
 })();
