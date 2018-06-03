@@ -1,6 +1,6 @@
 const { signToken } = require('../modules/auth');
 module.exports = {
-  async signUp(req, res, next) {
+  async signUp(req, res) {
     try {
       const { User } = req.dbModules;
       const { email, password } = req.value.body;
