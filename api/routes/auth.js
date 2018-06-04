@@ -12,6 +12,7 @@ router
    * @apiName Signup
    * @apiGroup Auth
    * @apiParam {String} email User's email
+   * @apiParam {String} password User's password
    * @apiSuccess {String} token The JWT token
    * @apiSuccessExample {json} Success response:
    *  HTTPS 201 CREATED
@@ -36,6 +37,7 @@ router
    * @apiName Signin
    * @apiGroup Auth
    * @apiParam {String} email User's email
+   * @apiParam {String} password User's password
    * @apiSuccess {String} token The JWT token
    * @apiSuccessExample {json} Success response:
    *  HTTPS 200 OK

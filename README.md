@@ -91,6 +91,7 @@ HTTPS 401 Unauthorized
 | Name    | Type      | Description                          |
 |---------|-----------|--------------------------------------|
 | email			| String			|  User's email							|
+| password			| String			|  User's password							|
 
 ### Success Response
 
@@ -128,6 +129,7 @@ HTTPS 400 BAD REQUEST
 | Name    | Type      | Description                          |
 |---------|-----------|--------------------------------------|
 | email			| String			|  User's email							|
+| password			| String			|  User's password							|
 
 ### Success Response
 
