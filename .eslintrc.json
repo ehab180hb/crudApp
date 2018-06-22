@@ -6,7 +6,24 @@
 	},
 	"plugins": ["prettier"],
 	"rules": {
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "indent": [
+      "error",
+      2
+  ],
+  "linebreak-style": [
+      "error",
+      "unix"
+  ],
+  "quotes": [
+      "warn",
+      "single"
+  ],
+  "semi": [
+      "error",
+      "always"
+  ],
+  "no-console": ["warn"]
 	},
 	"parserOptions": {
 			"sourceType": "module",

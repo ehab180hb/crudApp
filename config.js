@@ -8,7 +8,7 @@ const env = {
 if (env.isProd) requiredEnvs(['TOKEN_SECRET', 'MONGO_URI']);
 
 const mongoUri = !env.isProd
-  ? `mongodb://127.0.0.1:27017/testingMongoCrud`
+  ? 'mongodb://127.0.0.1:27017/testingMongoCrud'
   : process.env.MONGO_URI;
 
 const tokenSecret = !env.isProd ? 'A3.Fw;+T~.$@fo' : process.env.TOKEN_SECRET;

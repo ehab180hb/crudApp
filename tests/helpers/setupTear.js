@@ -9,31 +9,16 @@ module.exports = async function() {
     this.db = db;
     return {
       async refreshCollection(collectionName, collectionContent) {
-        return new Promise(async (resolve, reject) => {
-          try {
-            const collection = db.collection(collectionName);
-            await collection.remove();
-            await collection.insertMany(collectionContent);
-            resolve();
-          } catch (error) {
-            reject(error);
-          }
-        });
+        const collection = db.collection(collectionName);
+        await collection.remove();
+        await collection.insertMany(collectionContent);
       },
       async cleanUp(level) {
-        return new Promise(async (resolve, reject) => {
-          try {
-            await db.dropDatabase();
-            if (level == 'light') {
-              resolve();
-              return;
-            }
-            await client.close();
-            resolve();
-          } catch (error) {
-            reject(error);
-          }
-        });
+        await db.dropDatabase();
+        if (level == 'light') {
+          return;
+        }
+        await client.close();
       },
     };
   } catch (error) {

@@ -9,9 +9,10 @@ describe('module tests', () => {
   let request;
   let setupFunctions;
 
-  before(function() {
+  before(async function() {
     app = server.__get__('app');
     request = supertest.agent(app);
+    await setTimeout(() => {}, 1000);
   });
 
   describe('health check', function() {

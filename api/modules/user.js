@@ -8,20 +8,14 @@ function customFunctions(collection) {
      * @param {string} password
      * @returns {string} The 24 hex char ID of the user's document in the db.
      */
-    registerNew(email, password) {
-      return new Promise(async (resolve, reject) => {
-        try {
-          const salt = await bcrypt.genSalt(10);
-          const hashedPassword = await bcrypt.hash(password, salt);
-          const user = await collection.insertOne({
-            email,
-            password: hashedPassword,
-          });
-          resolve(user.insertedId);
-        } catch (error) {
-          reject(error);
-        }
+    async registerNew(email, password) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+      const user = await collection.insertOne({
+        email,
+        password: hashedPassword,
       });
+      return user.insertedId;
     },
     /**
      * Check if the given email exists in the database.
