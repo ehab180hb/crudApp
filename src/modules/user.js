@@ -16,7 +16,7 @@ function customFunctions(collection) {
         email,
         password: hashedPassword,
       });
-      
+
       return user.insertedId;
     },
     /**

@@ -23,7 +23,7 @@ module.exports = {
       const { id } = req.value.params;
 
       const userInfo = await User.findOne(ObjectId(id));
-      if (!userInfo){
+      if (!userInfo) {
         return res.status(404).json({ error: 'User does not exist' });
       }
 
@@ -62,7 +62,7 @@ module.exports = {
       const { email } = req.value.body;
 
       const existsAlready = await User.findOne({ email });
-      if (existsAlready){
+      if (existsAlready) {
         return res.status(409).json({ error: 'User already exists' });
       }
 
@@ -83,7 +83,7 @@ module.exports = {
 
       const { result } = await User.remove({ _id: ObjectId(id) });
       if (!result.n) return res.status(404).json({ error: 'User not found' });
-      
+
       res.status(200).json({ deleted: true });
     } catch (error) {
       logger.error(error);
