@@ -31,28 +31,16 @@ describe('module tests', () => {
 
   describe('APIs', function() {
     before(async function() {
-      try {
-        setupFunctions = await setupTear();
-      } catch (error) {
-        throw new Error(error);
-      }
+      setupFunctions = await setupTear();
     });
 
     beforeEach(async function() {
-      try {
-        const userObjects = require('./data/users');
-        await setupFunctions.refreshCollection('users', userObjects);
-      } catch (error) {
-        throw new Error(error);
-      }
+      const userObjects = require('./data/users');
+      await setupFunctions.refreshCollection('users', userObjects);
     });
 
     after(async function() {
-      try {
-        await setupFunctions.cleanUp();
-      } catch (error) {
-        throw new Error(error);
-      }
+      await setupFunctions.cleanUp();
     });
     describe('authentecation', function() {
       it('should sign a token for new signups', async function() {

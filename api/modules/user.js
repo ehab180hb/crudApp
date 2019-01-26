@@ -29,12 +29,8 @@ function customFunctions(collection) {
 }
 
 module.exports = db => {
-  try {
-    const collection = db.collection('users');
-    const User = collection;
-    User.customFunctions = customFunctions(collection);
-    return User;
-  } catch (error) {
-    throw new Error(error);
-  }
+  const collection = db.collection('users');
+  const User = collection;
+  User.customFunctions = customFunctions(collection);
+  return User;
 };
