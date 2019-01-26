@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const {
-  validateBody,
-  validateParamId,
-} = require('../handlers/user/validation');
+const { modifyUserSchema, idInObjectSchema } = require('../models/user.model');
+const { validate } = require('../handlers/validation');
 
 const {
   getAllUsers,
@@ -60,7 +58,7 @@ router
    *    "error": "Invalid email format"
    *  }
    */
-  .post(validateBody('addUser'), addUser);
+  .post(validate('body', modifyUserSchema), addUser);
 
 router
   .route('/:id/')
@@ -88,7 +86,7 @@ router
    *  HTTPS 404 NOT FOUND
    *  { "error": "User not found"  }
    */
-  .get(validateParamId, getUser)
+  .get(validate('params', idInObjectSchema), getUser)
   /**
    * @api {patch} /api/v1/user/:id Update user
    * @apiVersion 1.0.0
@@ -109,7 +107,11 @@ router
    *  HTTPS 400 BAD REQUEST
    *  { "error": "Invalid email format" }
    */
-  .patch(validateParamId, validateBody('editUser'), editUser)
+  .patch(
+    validate('params', idInObjectSchema),
+    validate('body', modifyUserSchema),
+    editUser,
+  )
   /**
    * @api {delete} /api/v1/user/:id Delete user
    * @apiVersion 1.0.0
@@ -131,6 +133,6 @@ router
    *    error: "Invalid ID, must be a string of 24 hex characters"
    *  }
    */
-  .delete(validateParamId, deleteUser);
+  .delete(validate('params', idInObjectSchema), deleteUser);
 
 module.exports = router;
