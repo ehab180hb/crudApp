@@ -2,8 +2,8 @@ const { app, logger } = require('./util');
 const { expressConf } = require('./config');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const routes = require('./api/routes/index');
-const modules = require('./api/modules/index');
+const routes = require('./routes/index');
+const modules = require('./modules/index');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

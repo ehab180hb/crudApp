@@ -1,7 +1,7 @@
 const JWT = require('jsonwebtoken');
 const passport = require('passport');
 const { Strategy: JWTStrategy, ExtractJwt } = require('passport-jwt');
-const { tokenSecret } = require('../../config');
+const { tokenSecret } = require('../config');
 const { Strategy: LocalStrategy } = require('passport-local');
 const bcrypt = require('bcryptjs');
 

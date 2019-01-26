@@ -1,5 +1,5 @@
-const { mongoConf } = require('../../config');
-const { MongoClient, ObjectId } = require('../../util');
+const { mongoConf } = require('../config');
+const { MongoClient, ObjectId } = require('../util');
 
 const userModule = require('./user');
 

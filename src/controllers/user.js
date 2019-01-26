@@ -1,4 +1,4 @@
-const { logger } = require('../../util');
+const { logger } = require('../util');
 
 module.exports = {
   async getAllUsers(req, res) {

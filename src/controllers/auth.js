@@ -1,5 +1,5 @@
 const { signToken } = require('../modules/auth');
-const { logger } = require('../../util');
+const { logger } = require('../util');
 module.exports = {
   async signUp(req, res) {
     try {
