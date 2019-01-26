@@ -1,8 +1,11 @@
+const Joi = require('joi');
+
 const express = require('express');
 const router = express.Router();
 const { signUp, signIn, secret } = require('../controllers/auth');
 const { protectRoute, refreshToken } = require('../modules/auth');
-const validate = require('../handlers/auth/validation');
+const { authSchema } = require('../models/auth.model');
+const { validate } = require('../handlers/validation');
 
 router
   .route('/signup')
@@ -28,7 +31,7 @@ router
    *    "error": "Invalid email format"
    *  }
    */
-  .post(validate('auth'), signUp);
+  .post(validate('body', authSchema), signUp);
 router
   .route('/signin')
   /**
@@ -53,7 +56,7 @@ router
    *    "error": "Invalid email format"
    *  }
    */
-  .post(validate('auth'), refreshToken, signIn);
+  .post(validate('body', authSchema), refreshToken, signIn);
 router
   .route('/secret')
   /**

@@ -1,5 +1,5 @@
 const { MongoClient } = require('mongodb');
-const { mongoConf } = require('../../config');
+const { mongoConf } = require('../../src/config');
 
 module.exports = async function() {
   try {

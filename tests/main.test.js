@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const rewire = require('rewire');
 const setupTear = require('./helpers/setupTear');
-const server = rewire('../server');
+const server = rewire('../src/server');
 const supertest = require('supertest');
 
 describe('module tests', () => {
