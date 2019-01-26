@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "NODE_ENV=test PORT=3012 mocha -s 0 --opts ./tests/mocha.opts \"./tests/**/*.test.js\"",
-    "pretest": "eslint --ignore-path .gitignore .",
+    "lint": "eslint --ignore-path .gitignore . --fix",
     "coverage": "nyc --reporter=lcov yarn test",
     "start": "node server.js",
     "dev": "NODE_ENV=development nodemon server.js",
@@ -23,10 +23,15 @@
     "mocha": "^5.1.1",
     "nodemon": "^1.17.4",
     "nyc": "^11.8.0",
+    "pre-commit": "^1.2.2",
     "prettier": "1.12.1",
     "rewire": "^4.0.1",
     "supertest": "^3.1.0"
   },
+  "pre-commit": [
+    "lint",
+    "test"
+  ],
   "dependencies": {
     "@google-cloud/logging-winston": "^0.9.0",
     "bcryptjs": "^2.4.3",
