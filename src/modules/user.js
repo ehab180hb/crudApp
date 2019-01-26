@@ -28,9 +28,11 @@ function customFunctions(collection) {
   };
 }
 
-module.exports = db => {
-  const collection = db.collection('users');
-  const User = collection;
-  User.customFunctions = customFunctions(collection);
-  return User;
+module.exports = {
+  getUserModule(db) {
+    const User = db.collection('users');
+    // extends the User collection with more methods
+    User.customFunctions = customFunctions(User);
+    return User;
+  },
 };

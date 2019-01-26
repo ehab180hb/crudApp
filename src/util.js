@@ -1,5 +1,4 @@
 require('dotenv').config();
-const { MongoClient, ObjectId } = require('mongodb');
 const { env } = require('./config');
 const express = require('express');
 const app = express();
@@ -8,7 +7,7 @@ let logger;
 if (!env.isProd) {
   const winston = require('winston');
   logger = winston.createLogger({
-    silent: env.isTest,
+    // silent: env.isTest,
     format: winston.format.simple(),
     transports: [new winston.transports.Console()],
   });
@@ -24,7 +23,5 @@ if (!env.isProd) {
 
 module.exports = {
   app,
-  MongoClient,
-  ObjectId,
   logger,
 };

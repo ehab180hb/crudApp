@@ -4,6 +4,8 @@ const { Strategy: JWTStrategy, ExtractJwt } = require('passport-jwt');
 const { tokenSecret } = require('../config');
 const { Strategy: LocalStrategy } = require('passport-local');
 const bcrypt = require('bcryptjs');
+const { getUserModule } = require('./user');
+const { ObjectId } = require('mongodb');
 
 passport.use(
   new JWTStrategy(
@@ -14,7 +16,7 @@ passport.use(
     },
     async (req, payload, done) => {
       try {
-        const { User, ObjectId } = req.dbModules;
+        const User = getUserModule(req.DB);
         const user = User.findOne(ObjectId(payload.sub));
         if (!user) return done(null, false);
         done(null, user);
@@ -33,7 +35,8 @@ passport.use(
     },
     async function(req, email, password, done) {
       try {
-        const { getUser } = req.dbModules.User.customFunctions;
+        const User = getUserModule(req.DB);
+        const { getUser } = User.customFunctions;
         const user = await getUser(email);
         if (!user) return done(null, false);
         const passwordValid = await passwordValidCheck(password, user.password);

@@ -1,9 +1,11 @@
 const { signToken } = require('../modules/auth');
 const { logger } = require('../util');
+const { getUserModule } = require('../modules/user');
 module.exports = {
   async signUp(req, res) {
     try {
-      const { getUser, registerNew } = req.dbModules.User.customFunctions;
+      const User = getUserModule(req.DB);
+      const { getUser, registerNew } = User.customFunctions;
       const { email, password } = req.value.body;
       const exists = await getUser(email);
       if (exists) return res.status(409).json({ error: 'User already exists' });
