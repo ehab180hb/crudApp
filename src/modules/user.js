@@ -11,10 +11,12 @@ function customFunctions(collection) {
     async registerNew(email, password) {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
+
       const user = await collection.insertOne({
         email,
         password: hashedPassword,
       });
+      
       return user.insertedId;
     },
     /**
