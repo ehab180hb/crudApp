@@ -53,11 +53,7 @@ passport.use(
  * @returns {Promise}
  */
 function passwordValidCheck(rawPassword, hashedPassword) {
-  try {
-    return bcrypt.compare(rawPassword, hashedPassword);
-  } catch (error) {
-    throw new Error(error);
-  }
+  return bcrypt.compare(rawPassword, hashedPassword);
 }
 module.exports = {
   /**

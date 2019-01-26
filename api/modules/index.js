@@ -7,7 +7,7 @@ module.exports = async () => {
   const { uri, dbName } = mongoConf;
   const client = await MongoClient.connect(uri, { useNewUrlParser: true });
   const db = client.db(dbName);
-  process.on('exit', async () => {
+  process.once('exit', async () => {
     await client.close();
   });
   return {

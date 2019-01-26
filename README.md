@@ -22,7 +22,7 @@ echo "MONGO_URI=\"<Your MongoDB URI here>\"\nTOKEN_SECRET=\"<Your token secret h
 gcloud app deploy
 ```
 
-Genereate HTML API documentation:
+Generate HTML API documentation:
 ```
 yarn doc
 ```
